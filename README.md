@@ -224,3 +224,19 @@ Pasirinkus studentų skirstymą, reikia nurodyti vieną iš trijų strategijų i
 <img width="193" height="64" alt="image" src="https://github.com/user-attachments/assets/20372944-c72d-43d4-859b-b51538931983" />
 
 Programa sukurs du rezultatų failus: vargsiukai_vector.txt ir galvociai_vector.txt arba atitinkamus failus su list pavadinimu.
+
+## v1.1:
+
+- `struct studentas` pakeista į `class Studentas`;
+
+### Struct (v1.0) ir class (v1.1) palyginimas
+
+Testuota su `std::vector`, 3 skirstymo strategija, tais pačiais failais (3 testų vidurkis, sekundėmis).
+
+| Versija | 100 000 | 1 000 000 |
+|---|---|---|
+| struct (v1.0) | 0,012 | 0,36 |
+| class (v1.1) | 0,017 | 0,16 |
+
+
+
