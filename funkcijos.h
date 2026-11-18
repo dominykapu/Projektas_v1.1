@@ -165,9 +165,12 @@ void Nuskaitymas(T& grupe){
     while (getline(f, eilute)){
         stringstream ss(eilute);
         Studentas A(ss);
+        if (A.Pazymiai().empty()){
+                cout<<"Klaida faile, eilute praleista: "<<eilute<<"\n";
+        continue;
+        }
         grupe.push_back(A);
     }
-
     auto pabaiga=std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> laikas=pabaiga-pradzia;
 
