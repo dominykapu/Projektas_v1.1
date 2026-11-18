@@ -14,6 +14,16 @@ private:
     int egz;
 
 public:
+    studentas() : egz(0){}
+
+    studentas(const studentas& other){
+        var=other.var;
+        pav=other.pav;
+        paz=other.paz;
+        egz=other.egz;
+    }
+    ~Studentas(){}
+
     double galutinis;
 
     inline string Vardas() const {return var;}
