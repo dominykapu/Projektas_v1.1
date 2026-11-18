@@ -4,27 +4,26 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <iostream>
 using std::string;
 using std::vector;
 
-class studentas {
+class Studentas {
 private:
     string var, pav;
     vector<int> paz;
     int egz;
 
 public:
-    studentas() : egz(0){}
+    Studentas() : egz(0){}
 
-    studentas(const studentas& other){
+    Studentas(const studentas& other){
         var=other.var;
         pav=other.pav;
         paz=other.paz;
         egz=other.egz;
     }
     ~Studentas(){}
-
-    double galutinis;
 
     inline string Vardas() const {return var;}
     inline string Pavarde() const {return pav;}
@@ -35,9 +34,12 @@ public:
     void setPavarde(string p) {pav=p;}
     void setPazymiai(vector<int> p) {paz=p;}
     void setEgzaminas(int e) {egz=e;}
+
+    double skaiciuotiVid() const;
+    double skaiciuotiMed() const;
     };
 
-inline double studentas::skaiciuotiVid() const{
+inline double Studentas::skaiciuotiVid() const{
     if (paz.empty()){ //Kad nebutu dalybos is nulio
         return 0;
     }
@@ -45,7 +47,7 @@ inline double studentas::skaiciuotiVid() const{
     return 0.4 * vid + 0.6 * egz;
 }
 
-inline double studentas::skaiciuotiMed() const{
+inline double Studentas::skaiciuotiMed() const{
     if (paz.empty()){ //Kad nebutu dalybos is nulio
         return 0;
     }
