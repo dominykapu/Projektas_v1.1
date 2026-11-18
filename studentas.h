@@ -17,7 +17,24 @@ private:
 public:
     Studentas() : egz(0){}
 
-    Studentas(const studentas& other){
+    Studentas(std::istream& is){readStudent(is);}
+
+    std::istream& readStudent(std::istream& is){
+        is>>var>>pav;
+        paz.clear();
+        int p;
+        while (is>>p){
+            paz.push_back(p);
+        }
+        if (!paz.empty()){
+            egz=paz.back();
+            paz.pop_back();
+        }
+        is.clear();
+        return is;
+    }
+
+    Studentas(const Studentas& other){
         var=other.var;
         pav=other.pav;
         paz=other.paz;
@@ -43,7 +60,7 @@ inline double Studentas::skaiciuotiVid() const{
     if (paz.empty()){ //Kad nebutu dalybos is nulio
         return 0;
     }
-    double vid = accumulate(paz.begin(), paz.end(), 0.0) / paz.size();
+    double vid = std::accumulate(paz.begin(), paz.end(), 0.0) / paz.size();
     return 0.4 * vid + 0.6 * egz;
 }
 
