@@ -29,9 +29,10 @@ using std::stringstream;
 using std::list;
 
 int main(){
+
     srand(time(0));
-    vector<studentas> grupe;
-    list<studentas> grupeList;
+    vector<Studentas> grupe;
+    list<Studentas> grupeList;
 
     int konteineris;
 
