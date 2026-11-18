@@ -15,38 +15,22 @@ private:
     int egz;
 
 public:
-    Studentas() : egz(0){}
-
-    Studentas(std::istream& is){readStudent(is);}
-
-    std::istream& readStudent(std::istream& is){
-        is>>var>>pav;
-        paz.clear();
-        int p;
-        while (is>>p){
-            paz.push_back(p);
-        }
-        if (!paz.empty()){
-            egz=paz.back();
-            paz.pop_back();
-        }
-        is.clear();
-        return is;
-    }
-
-    Studentas(const Studentas& other){
-        var=other.var;
-        pav=other.pav;
-        paz=other.paz;
-        egz=other.egz;
-    }
+    //konstruktoriai
+    Studentas() : egz(0) {}
+    Studentas(std::istream& is);
+    Studentas(const Studentas& other);
+    //destruktorius
     ~Studentas(){}
 
+    std::istream& readStudent(std::istream& is);
+
+    //geteriai
     inline string Vardas() const {return var;}
     inline string Pavarde() const {return pav;}
     inline vector<int> Pazymiai() const {return paz;}
     inline int Egzaminas() const {return egz;}
 
+    //seteriai
     void setVardas(string v) {var=v;}
     void setPavarde(string p) {pav=p;}
     void setPazymiai(vector<int> p) {paz=p;}
@@ -55,26 +39,5 @@ public:
     double skaiciuotiVid() const;
     double skaiciuotiMed() const;
     };
-
-inline double Studentas::skaiciuotiVid() const{
-    if (paz.empty()){ //Kad nebutu dalybos is nulio
-        return 0;
-    }
-    double vid = std::accumulate(paz.begin(), paz.end(), 0.0) / paz.size();
-    return 0.4 * vid + 0.6 * egz;
-}
-
-inline double Studentas::skaiciuotiMed() const{
-    if (paz.empty()){ //Kad nebutu dalybos is nulio
-        return 0;
-    }
-    std::vector<int> laikinas=paz;
-    std::sort(laikinas.begin(), laikinas.end());
-
-    double med;
-    if (laikinas.size()%2 == 0) med = (laikinas[laikinas.size()/2-1]+laikinas[laikinas.size()/2])/2.0;
-    else med = laikinas[laikinas.size()/2];
-    return 0.4 * med + 0.6 * egz;
-}
 
 #endif // STUDENTAS_H_INCLUDED
