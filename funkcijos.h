@@ -27,24 +27,29 @@ using std::setw;
 using std::fixed;
 using std::setprecision;
 
-double GalutinisVid(vector<int> paz, int egz);
-double GalutinisMed(vector<int> paz, int egz);
-void Rikiuoti(vector<studentas>& grupe, int rikiuoti);
-void Rikiuoti(list<studentas>& grupe, int rikiuoti);
+void Rikiuoti(vector<Studentas>& grupe, int rikiuoti);
+void Rikiuoti(list<Studentas>& grupe, int rikiuoti);
 void GeneruotiFaila(int kiek);
-void Skirstyti3Strat(vector<studentas>& grupe, vector<studentas>& vargsiukai, vector<studentas>& galvociai);
-void Skirstyti3Strat(list<studentas>& grupe, list<studentas>& vargsiukai, list<studentas>& galvociai);
+void Skirstyti3Strat(vector<Studentas>& grupe, vector<Studentas>& vargsiukai, vector<Studentas>& galvociai);
+void Skirstyti3Strat(list<Studentas>& grupe, list<Studentas>& vargsiukai, list<Studentas>& galvociai);
 
 template <class T>
 void IvestiStudenta(T& grupe){
-    studentas A;
+    Studentas A;
+    string v;
+    string p;
+    int n;
+    int e;
+    vector<int> paz;
+
     cout << "Iveskite varda: ";
-    cin >> A.var;
+    cin >> v;
+    A.setVardas(v);
     cout << "Iveskite pavarde: ";
-    cin >> A.pav;
+    cin >> p;
+    A.setPavarde(p);
 
     while (true){
-        int n;
         char kl;
         while (true){
             cout << "Iveskite semestro pazymi: ";
@@ -57,9 +62,11 @@ void IvestiStudenta(T& grupe){
             }
             else if (n < 1 || n > 10){
                 cout << "Klaida! Pazymys turi buti nuo 1 iki 10.\n";
+                cin.clear();
+                cin.ignore(1000, '\n');
             }
             else{
-                A.paz.push_back(n);
+                paz.push_back(n);
                 break;
             }
         }
@@ -69,35 +76,46 @@ void IvestiStudenta(T& grupe){
             break;
         }
     }
+    A.setPazymiai(paz);
+
     while (true){
         cout <<"Iveskite egzamina: ";
-        cin >>A.egz;
+        cin >> e;
 
         if (cin.fail()){
             cout <<"Klaida! Iveskite skaiciu.\n";
             cin.clear();
             cin.ignore(1000, '\n');
         }
-        else if (A.egz<1 || A.egz>10){
+        else if (e<1 || e>10){
             cout <<"Klaida! Pazymys turi buti nuo 1 iki 10.\n";
+            cin.clear();
+            cin.ignore(1000, '\n');
         }
         else{
+            A.setEgzaminas(e);
             break;
         }
     }
-
-    A.galutinis = GalutinisVid(A.paz, A.egz);
     grupe.push_back(A);
 
-    cout<<"Studentas: "<<A.var<<" "<<A.pav<<"\n";
+    cout<<"Studentas: "<<A.Vardas()<<" "<<A.Pavarde()<<"\n";
     cout<<"Atminties adresas: "<<&grupe.back()<<"\n";
 }
 template <class T>
 void GeneruotiPazymi(T& grupe){
-    studentas A;
-    cout <<"Iveskite varda: "; cin>>A.var;
-    cout <<"Iveskite pavarde: "; cin>>A.pav;
+    Studentas A;
+    string v, p;
     int kiek;
+    vector<int> paz;
+
+    cout <<"Iveskite varda: ";
+    cin >> v;
+    A.setVardas(v);
+    cout <<"Iveskite pavarde: ";
+    cin >> p;
+    A.setPavarde(p);
+
     while (true){
         cout <<"Kiek generuoti pazymiu?: ";
         cin >> kiek;
@@ -109,6 +127,8 @@ void GeneruotiPazymi(T& grupe){
         }
         else if (kiek<1){
             cout <<"Klaida! Pazymiu turi buti bent vienas.\n";
+            cin.clear();
+            cin.ignore(1000, '\n');
         }
         else{
             break;
@@ -116,10 +136,11 @@ void GeneruotiPazymi(T& grupe){
     }
     for (int i=0; i<kiek; i++){
         int pazymys=rand()%10+1;
-        A.paz.push_back(pazymys);
+        paz.push_back(pazymys);
     }
-    A.egz=rand()%10+1;
-    A.galutinis = GalutinisVid(A.paz, A.egz);
+
+    A.setPazymiai(paz);
+    A.setEgzaminas(rand()%10+1);
     grupe.push_back(A);
 }
 template <class T>
@@ -143,23 +164,10 @@ void Nuskaitymas(T& grupe){
     string eilute;
     while (getline(f, eilute)){
         stringstream ss(eilute);
-        studentas A;
-        ss >> A.var;
-        ss >> A.pav;
-
-        int pazymys;
-        while (ss >> pazymys){
-            A.paz.push_back(pazymys);
-        }
-        if (!ss.eof() || A.paz.empty()){ //Jei yra raide ciklas sustoja, nes raide negali buti ideta i pazymys
-            cout << "Klaida faile, eilute praleista: " << eilute << "\n";
-            continue;
-            }
-        A.egz = A.paz.back();
-        A.paz.pop_back();
-        A.galutinis = GalutinisVid(A.paz, A.egz);
+        Studentas A(ss);
         grupe.push_back(A);
     }
+
     auto pabaiga=std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> laikas=pabaiga-pradzia;
 
@@ -194,9 +202,9 @@ void Spausdinti(T& grupe, int pasirinkimas, int rikiuoti){
 
     for (auto B : grupe)
     {
-        cout <<"|"<<left<<setw(15)<<B.var<<"|"<<left<<setw(20)<<B.pav;
-        if (RodytiVid == true) cout <<"|"<<right<<setw(17)<<fixed<<setprecision(2)<<B.galutinis;
-        if (RodytiMed == true) cout <<"|"<<right<<setw(17)<<fixed<<setprecision(2)<<GalutinisMed(B.paz, B.egz);
+        cout <<"|"<<left<<setw(15)<<B.Vardas()<<"|"<<left<<setw(20)<<B.Pavarde();
+        if (RodytiVid == true) cout <<"|"<<right<<setw(17)<<fixed<<setprecision(2)<<B.skaiciuotiVid();
+        if (RodytiMed == true) cout <<"|"<<right<<setw(17)<<fixed<<setprecision(2)<<B.skaiciuotiMed();
         cout <<"|\n";
     }
 }
@@ -211,14 +219,14 @@ void SkirstytiStudentus(T& grupe, int rikiuoti, string konteineris, int strategi
     //1 strategija
     if (strategija==1){
         for (auto A : grupe){
-        if (A.galutinis<5.0) vargsiukai.push_back(A);
+        if (A.skaiciuotiVid()<5.0) vargsiukai.push_back(A);
         else galvociai.push_back(A);
         }
     }
     //2 strategija
     else if (strategija==2){
         for (auto it=grupe.begin(); it!=grupe.end();){
-            if (it->galutinis<5.0){
+            if (it->skaiciuotiVid()<5.0){
                 vargsiukai.push_back(*it);
                 it=grupe.erase(it);
             }
@@ -257,10 +265,10 @@ void SkirstytiStudentus(T& grupe, int rikiuoti, string konteineris, int strategi
     galvociaiFailas<<left<<setw(15)<<"Vardas"<<setw(20)<<"Pavarde"<<"Galutinis\n";
 
     for (auto A : vargsiukai){
-        vargsiukaiFailas<<left<<setw(15)<<A.var<<setw(20)<<A.pav<<fixed<<setprecision(2)<<A.galutinis<<"\n";
+        vargsiukaiFailas<<left<<setw(15)<<A.Vardas()<<setw(20)<<A.Pavarde()<<fixed<<setprecision(2)<<A.skaiciuotiVid()<<"\n";
     }
     for (auto A : galvociai){
-        galvociaiFailas<<left<<setw(15)<<A.var<<setw(20)<<A.pav<<fixed<<setprecision(2)<<A.galutinis<<"\n";
+        galvociaiFailas<<left<<setw(15)<<A.Vardas()<<setw(20)<<A.Pavarde()<<fixed<<setprecision(2)<<A.skaiciuotiVid()<<"\n";
     }
     vargsiukaiFailas.close();
     galvociaiFailas.close();
