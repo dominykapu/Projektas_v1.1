@@ -29,35 +29,16 @@ using std::getline;
 using std::stringstream;
 using std::list;
 
-double GalutinisVid(vector<int> paz, int egz){
-    if (paz.empty()){ //Kad nebutu dalybos is nulio
-        return 0;
-    }
-    double vid = accumulate(paz.begin(), paz.end(), 0.0) / paz.size();
-    return 0.4 * vid + 0.6 * egz;
-}
-
-double GalutinisMed(vector<int> paz, int egz){
-    if (paz.empty()){ //Kad nebutu dalybos is nulio
-        return 0;
-    }
-    sort(paz.begin(), paz.end());
-    int paz_sk = paz.size();
-    double med;
-    if (paz_sk%2 == 0) med = (paz[paz_sk/2-1]+paz[paz_sk/2])/2.0;
-    else med = paz[paz_sk/2];
-    return 0.4 * med + 0.6 * egz;
-}
-void Skirstyti3Strat(vector<studentas>& grupe, vector<studentas>& vargsiukai, vector<studentas>& galvociai){
-    auto it=std::stable_partition(grupe.begin(), grupe.end(), [](const studentas& s) {return s.galutinis>=5.0; });
+void Skirstyti3Strat(vector<Studentas>& grupe, vector<Studentas>& vargsiukai, vector<Studentas>& galvociai){
+    auto it=std::stable_partition(grupe.begin(), grupe.end(), [](const Studentas& s) {return s.skaiciuotiVid()>=5.0; });
             vargsiukai.assign(it, grupe.end());
             grupe.erase(it, grupe.end());
             galvociai=grupe;
 }
-void Skirstyti3Strat(list<studentas>& grupe, list<studentas>& vargsiukai, list<studentas>& galvociai){
+void Skirstyti3Strat(list<Studentas>& grupe, list<Studentas>& vargsiukai, list<Studentas>& galvociai){
 //    auto it=grupe.begin();
 //            while (it!=grupe.end()){
-//                if (it->galutinis<5.0){
+//                if (it->skaiciuotiVid()<5.0){
 //                    vargsiukai.splice(vargsiukai.end(), grupe, it++);
 //                }
 //                else{
@@ -65,44 +46,44 @@ void Skirstyti3Strat(list<studentas>& grupe, list<studentas>& vargsiukai, list<s
 //                }
 //            }
 //            galvociai=grupe;
-auto it=std::stable_partition(grupe.begin(), grupe.end(), [](const studentas& s) {return s.galutinis>=5.0; });
+auto it=std::stable_partition(grupe.begin(), grupe.end(), [](const Studentas& s) {return s.skaiciuotiVid()>=5.0; });
             vargsiukai.assign(it, grupe.end());
             grupe.erase(it, grupe.end());
             galvociai=grupe;
 
 }
-void Rikiuoti(vector<studentas>& grupe, int rikiuoti){
+void Rikiuoti(vector<Studentas>& grupe, int rikiuoti){
     if (rikiuoti == 1){
-        sort(grupe.begin(), grupe.end(), [](studentas a, studentas b){
-        return a.pav < b.pav;
+        sort(grupe.begin(), grupe.end(), [](const Studentas& a, const Studentas& b){
+        return a.Pavarde() < b.Pavarde();
     });
     }
     if (rikiuoti == 2){
-        sort(grupe.begin(), grupe.end(), [](studentas a, studentas b){
-        return a.var < b.var;
+        sort(grupe.begin(), grupe.end(), [](const Studentas& a, const Studentas& b){
+        return a.Vardas() < b.Vardas();
     });
     }
     if (rikiuoti == 3){
-        sort(grupe.begin(), grupe.end(), [](studentas a, studentas b){
-        return a.galutinis < b.galutinis;
+        sort(grupe.begin(), grupe.end(), [](const Studentas& a, const Studentas& b){
+        return a.skaiciuotiVid() < b.skaiciuotiVid();
     });
     }
 }
 
-void Rikiuoti(list<studentas>& grupe, int rikiuoti){
+void Rikiuoti(list<Studentas>& grupe, int rikiuoti){
     if (rikiuoti == 1){
-        grupe.sort([](studentas a, studentas b){
-        return a.pav < b.pav;
+        grupe.sort([](const Studentas& a, const Studentas& b){
+        return a.Pavarde() < b.Pavarde();
     });
     }
     if (rikiuoti == 2){
-        grupe.sort([](studentas a, studentas b){
-        return a.var < b.var;
+        grupe.sort([](const Studentas& a, const Studentas& b){
+        return a.Vardas() < b.Vardas();
     });
     }
     if (rikiuoti == 3){
-        grupe.sort([](studentas a, studentas b){
-        return a.galutinis < b.galutinis;
+        grupe.sort([](const Studentas& a, const Studentas& b){
+        return a.skaiciuotiVid() < b.skaiciuotiVid();
     });
     }
 }
