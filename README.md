@@ -238,5 +238,21 @@ Testuota su `std::vector`, 3 skirstymo strategija, tais pačiais failais (3 test
 | struct (v1.0) | 0,012 | 0,36 |
 | class (v1.1) | 0,017 | 0,16 |
 
+### Optimizavimo flag'ų analizė
 
+Testuota su `std::vector`, 3 skirstymo strategija (3 testų vidurkis, sekundėmis).
 
+| Flag | Versija | 100 000 | 1 000 000 | exe dydis |
+|---|---|---|---|---|
+| O1 | struct | 0,007 | 0,06 | 2,48 MB |
+| O1 | class | 0,008 | 0,07 | 1,75 MB |
+| O2 | struct | 0,007 | 0,06 | 7,35 MB |
+| O2 | class | 0,007 | 0,07 | 1,72 MB |
+| O3 | struct | 0,007 | 0,06 | 10,3 MB |
+| O3 | class | 0,008 | 0,06 | 2,47 MB |
+
+### Išvados
+
+- **Class vs Struct:** Class versija veikia taip pat greitai.
+- **Optimizavimo flag'ai:** Flag'ai programos greičiui beveik neturi įtakos.
+- **Failo dydis:** Class versija su -O3 sugeneruoja net 4 kartus mažesnį .exe failą (2,5 MB prieš 10 MB).
